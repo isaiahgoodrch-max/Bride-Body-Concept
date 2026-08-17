@@ -261,12 +261,17 @@ header.stuck{background:rgba(252,250,247,.9); backdrop-filter:saturate(150%) blu
 .caro::-webkit-scrollbar{display:none}
 .caro > figure{
   margin:0; flex:0 0 78%; scroll-snap-align:start;
-  overflow:hidden; background:var(--sand); border-radius:2px;
+  display:flex; flex-direction:column;
 }
+.caro .ph{overflow:hidden; background:var(--sand); border-radius:2px}
+.caro figcaption{padding:16px 2px 0}
+.caro .nm{font-family:var(--serif); font-size:1.12rem; color:var(--ink); line-height:1.2}
+.caro .mt{font-size:.66rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rose); margin-top:6px; font-weight:600}
+.caro .rs{font-size:.88rem; color:var(--muted); margin-top:9px; line-height:1.5}
 @media(min-width:640px){ .caro > figure{flex-basis:44%} }
 @media(min-width:1000px){ .caro > figure{flex-basis:31%} }
 .caro img{width:100%; aspect-ratio:1/1; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.3,1)}
-.caro > figure:hover img{transform:scale(1.05)}
+.caro > figure:hover .ph img{transform:scale(1.05)}
 
 /* ---------- marquee ---------- */
 .marq{
@@ -512,14 +517,54 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
       </div>
     </div>
     <div class="caro rv" id="tcaro" tabindex="0" aria-label="Transformation photos">
-      <figure><img src="assets/t1.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t2.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t3.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t4.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t5.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t6.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t7.jpg" alt="Bride transformation" loading="lazy"></figure>
-      <figure><img src="assets/t8.jpg" alt="Bride transformation" loading="lazy"></figure>
+      <figure>
+        <div class="ph"><img src="assets/t2.jpg" alt="Lauren D, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Lauren D, 35</div>
+          <div class="mt">18 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Lost 15 lbs and felt confident in her backless gown</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="ph"><img src="assets/t3.jpg" alt="Nevena M, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Nevena M, 27</div>
+          <div class="mt">26 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Lost 20 lbs, and the bloat and brain fog went with it</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="ph"><img src="assets/t4.jpg" alt="Yazmine T, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Yazmine T, 24</div>
+          <div class="mt">10 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Toned arms and back for her strapless dress</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="ph"><img src="assets/t7.jpg" alt="Gillian G, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Gillian G, 27</div>
+          <div class="mt">16 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Had her dress sized down more than once</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="ph"><img src="assets/t6.jpg" alt="Sam B, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Sam B, 30</div>
+          <div class="mt">14 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Built habits that lasted well beyond the wedding</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="ph"><img src="assets/t8.jpg" alt="Harley S, before and after" loading="lazy"></div>
+        <figcaption>
+          <div class="nm">Harley S, 29</div>
+          <div class="mt">6 weeks &middot; 1:1 Coaching</div>
+          <p class="rs">Hit her body recomposition goal in six weeks</p>
+        </figcaption>
+      </figure>
     </div>
     <div class="wrap center rv" style="margin-top:40px">
       <a class="btn btn-primary" href="#book">Start Your Transformation <span class="arw">↗</span></a>
@@ -741,20 +786,48 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
     nums.forEach(function(n){ nio.observe(n) });
   }
 
-  /* transformations carousel */
+  /* transformations carousel: auto-advances, yields to the visitor */
   var caro = document.getElementById('tcaro');
   var prev = document.querySelector('[data-caro="prev"]');
   var next = document.querySelector('[data-caro="next"]');
   function page(){ return caro.querySelector('figure').getBoundingClientRect().width + 14 }
+  function maxScroll(){ return caro.scrollWidth - caro.clientWidth }
   function sync(){
     prev.disabled = caro.scrollLeft < 8;
-    next.disabled = caro.scrollLeft > caro.scrollWidth - caro.clientWidth - 8;
+    next.disabled = caro.scrollLeft > maxScroll() - 8;
   }
-  prev.addEventListener('click', function(){ caro.scrollBy({left:-page(), behavior:'smooth'}) });
-  next.addEventListener('click', function(){ caro.scrollBy({left: page(), behavior:'smooth'}) });
   caro.addEventListener('scroll', sync, {passive:true});
   window.addEventListener('resize', sync);
   sync();
+
+  var held = false, resumeAt = 0, onScreen = false;
+  function hold(ms){ held = true; resumeAt = Date.now() + (ms || 0) }
+  function release(){ held = false; resumeAt = 0 }
+  prev.addEventListener('click', function(){ hold(9000); caro.scrollBy({left:-page(), behavior:'smooth'}) });
+  next.addEventListener('click', function(){ hold(9000); caro.scrollBy({left: page(), behavior:'smooth'}) });
+  caro.addEventListener('pointerenter', function(){ hold(0) });
+  caro.addEventListener('pointerleave', release);
+  caro.addEventListener('focusin', function(){ hold(0) });
+  caro.addEventListener('focusout', release);
+  caro.addEventListener('pointerdown', function(){ hold(0) });
+  caro.addEventListener('pointerup', function(){ hold(9000) });
+  caro.addEventListener('touchend', function(){ hold(9000) }, {passive:true});
+
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(function(l){ onScreen = l[0].isIntersecting }, {threshold:0.25}).observe(caro);
+  } else { onScreen = true }
+
+  if(!reduce){
+    setInterval(function(){
+      if(!onScreen) return;
+      if(held){
+        if(resumeAt && Date.now() > resumeAt) release();
+        else return;
+      }
+      if(caro.scrollLeft >= maxScroll() - 8) caro.scrollTo({left:0, behavior:'smooth'});
+      else caro.scrollBy({left:page(), behavior:'smooth'});
+    }, 4200);
+  }
 
   /* header state + mobile dock */
   var hdr = document.getElementById('hdr'), dock = document.getElementById('dock'), book = document.getElementById('book');

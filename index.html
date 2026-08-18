@@ -381,7 +381,12 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
   html{scroll-behavior:auto}
   .rv{opacity:1; transform:none; transition:none}
   .hero-media img{animation:none}
-  .marq-track{animation:none}
+  /* don't just freeze the marquee, that strands every card past the fold.
+     hand it to the visitor as a scrollable row. */
+  .marq{overflow-x:auto; -webkit-mask-image:none; mask-image:none; padding-inline:var(--gut); scrollbar-width:none}
+  .marq::-webkit-scrollbar{display:none}
+  .marq-track{animation:none; scroll-snap-type:x proximity}
+  .quote{scroll-snap-align:start}
 }
 </style>
 </head>
@@ -414,7 +419,7 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
         <a class="btn btn-ghost" href="#results">See Real Brides</a>
       </div>
       <div class="hero-trust">
-        <span><b>50+</b> brides</span>
+        <span><b>65+</b> brides</span>
         <span class="dot"></span>
         <span class="stars" aria-label="5 out of 5">★★★★★</span>
         <span class="dot"></span>
@@ -442,7 +447,7 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
   <section class="stats">
     <div class="wrap">
       <div class="stats-grid rv">
-        <div class="stat"><div class="n" data-to="50" data-suffix="+">50+</div><div class="l">Satisfied Clients</div></div>
+        <div class="stat"><div class="n" data-to="65" data-suffix="+">65+</div><div class="l">Satisfied Clients</div></div>
         <div class="stat"><div class="n">5/5</div><div class="l">Average Rating</div></div>
         <div class="stat"><div class="n" data-to="15" data-suffix="+">15+</div><div class="l">Years of Experience</div></div>
         <div class="stat"><div class="n">1:1</div><div class="l">Personalized Coaching</div></div>
@@ -577,7 +582,7 @@ footer{background:var(--ink); color:rgba(255,255,255,.55); padding-block:50px; b
       <div class="narrow center rv">
         <span class="eyebrow">Testimonials</span>
         <h2>What Our <em>Members</em> Say</h2>
-        <p class="lede">50+ Satisfied Brides &amp; Counting</p>
+        <p class="lede">65+ Satisfied Brides &amp; Counting</p>
       </div>
     </div>
     <div class="marq rv"><div class="marq-track" id="marq"></div></div>

@@ -35,11 +35,11 @@ which don't exist on the live site.
 1. **The form is a demo.** `#bookForm` prevents default and shows a confirmation.
    Wire it to Formspree / her CRM, or swap the card for a Calendly / Acuity embed.
 2. Footer legal links point to `#`.
-3. **Client count is 50+**, which is the only figure published anywhere on her site
-   (homepage stats and the transformations page both say it). If Bree confirms a
-   higher real number, it lives in exactly three places in `index.html`:
-   the hero trust line, the stats block (`data-to` plus the visible text), and the
-   testimonials lede. Round down, not up.
+3. **Client count reads 65+, which is not yet confirmed.** Her live site says 50+
+   in both places it appears; 65+ comes from a recollection of a higher number and
+   still needs Bree to confirm it. It lives in three places in `index.html`: the
+   hero trust line, the stats block (`data-to` plus the visible text), and the
+   testimonials lede. Round down, never up.
 4. "15+ years" conflicts with "over a decade" in her live bio. Confirm which is right.
 5. Swap `assets/` for higher-res originals if she has them. Everything here was
    pulled from the live site and recompressed.
